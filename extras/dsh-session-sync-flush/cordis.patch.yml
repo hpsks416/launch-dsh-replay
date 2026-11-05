@@ -1,0 +1,4 @@
+# dsh-session-sync-flush bundle patch: mount this package as one composition row.
+- insert:
+    - id: session-sync-flush
+      name: 'dsh-session-sync-flush'

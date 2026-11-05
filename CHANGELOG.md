@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.3.0 — 2026-11-05
+
+整包整合：把崩溃栈收进同一个仓库/分发包。
+
+### 新增
+- `extras/dsh-session-sync-flush/`：适配桌面端 `0.2.2-rc.1` 的缩窗插件（事件级 flush，双接口回退），
+  随包分发但需手动登记到 profile 后启用（不自动安装）。
+- `docs/CRASH-STACK.md`：崩溃记录栈唯一入口——四层结构、官方 flush 语义、安装/验证/崩后应急/回滚/边界。
+- README 目录树与「崩前记录与崩溃修复」章节链接到上述文档。
+
+### 变更
+- 分发包更名 `launch-dsh-replay-1.3.0.zip`（21+ 文件，含 extras 与 docs）。
+- 本项目仍是只读查看器；缩窗与修复分别由 sync-flush / surgeon 承担（surgeon 不 vendor，从 GitHub 安装）。
+
 ## 1.2.0 — 2026-11-05
 
 崩溃记录 / 修复整合。

@@ -40,6 +40,8 @@ launch-dsh-replay/
 ├─ lib/sessions.mjs          会话发现 / 根目录解析 / 元数据缓存 / 单文件 HTML 导出
 ├─ tests/smoke.mjs           自检（9 项，零依赖、无需 DSH）
 ├─ tools/persistence-lag.mjs 落盘滞后探针（测崩溃窗口用）
+├─ docs/CRASH-STACK.md       崩溃记录栈：安装/验证/应急/回滚/边界
+├─ extras/dsh-session-sync-flush/  适配版缩窗插件（可选安装，不随主程序自动启用）
 ├─ launch-dsh-replay.cmd     Windows 双击启动（纯 ASCII）
 ├─ launch-dsh-replay.ps1     Windows 交互菜单
 ├─ docs/replay-overview.png  回放界面实拍
@@ -51,8 +53,8 @@ launch-dsh-replay/
    ├─ LICENSE  NOTICE.md
 ```
 
-> 发布包为 `launch-dsh-replay-1.2.0.zip`，解压得到 `launch-dsh-replay-1.2.0/`；
-> 同目录附 `SHA256SUMS.txt`，校验：`Get-FileHash launch-dsh-replay-1.2.0.zip -Algorithm SHA256`。
+> 发布包为 `launch-dsh-replay-1.3.0.zip`，解压得到 `launch-dsh-replay-1.3.0/`；
+> 同目录附 `SHA256SUMS.txt`，校验：`Get-FileHash launch-dsh-replay-1.3.0.zip -Algorithm SHA256`。
 
 ## 安装
 
@@ -179,6 +181,9 @@ node dsh-replay-web.mjs [--port 7781] [--limit 40] [--no-open]
 | `dsh-session-sync-flush`（适配版） | 关键事件（user/assistant/tool call/result）后立即 `flush`，把丢失窗口从「整个请求」缩到「单个事件」 | `CINTRO\dsh-session-sync-flush\`，已装入 desktop profile |
 | `dsh-session-surgeon`（MIT，13★） | 崩溃损坏修复：torn zstd、write/fsync 之间崩溃导致的零填充尾部、seq gap、缺 message id 等；默认 dry-run + `.bak.<utc>` | `dsh-session-surgeon` 插件（desktop profile），CLI 见下 |
 | 本工具 `tools/persistence-lag.mjs` | 测崩溃窗口（落盘滞后、torn 尾帧） | `node tools/persistence-lag.mjs [--json]` |
+
+> 安装、验证、崩后应急、回滚、保证/不保证的完整流程见 **[docs/CRASH-STACK.md](docs/CRASH-STACK.md)**；
+> 适配版插件在 [`extras/dsh-session-sync-flush/`](extras/dsh-session-sync-flush/)（可选安装，不随主程序自动启用）。
 
 > 注：surgeon 的 **CLI** 会按 PATH 上的 `dsh` 探版本；本机全局 CLI 仍是 0.1.5（只读 v3），
 > 所以 CLI 看 v4 会报 `foreign-version`。**用插件形态（重启桌面端后）**它会按桌面端 0.2.2 的运行时
