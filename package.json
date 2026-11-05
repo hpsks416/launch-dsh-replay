@@ -1,0 +1,26 @@
+{
+  "name": "launch-dsh-replay",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Desktop port of the DSH WEB launch-dsh-replay viewer: offline, read-only session replay for DeepSeek Harness session v4 (desktop DSH 0.2.x) and v3 (WEB 0.15) logs. Zero runtime dependencies.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.19"
+  },
+  "scripts": {
+    "guide": "node dsh-replay-web.mjs",
+    "list": "node render.mjs --list",
+    "latest": "node render.mjs --latest",
+    "test": "node tests/smoke.mjs"
+  },
+  "author": "hpsks416",
+  "license": "MIT",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "session-replay",
+    "offline",
+    "v4",
+    "v3"
+  ]
+}

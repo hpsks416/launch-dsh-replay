@@ -1,0 +1,23 @@
+# Dependencies / package caches (the tool itself has zero runtime dependencies;
+# these appear only if you experiment with pnpm/npm in this folder).
+node_modules/
+.pnpm-store/
+
+# Rendered artifacts — regenerate with `node render.mjs --latest`
+*.replay.html
+replay-out/
+dsh-replay-out/
+
+# Distribution artifacts are committed on purpose: dist/ holds the release zip.
+# Logs / temp files
+*.log
+*.tmp
+
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor folders
+.vscode/
+.idea/

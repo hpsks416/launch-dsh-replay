@@ -1,0 +1,10 @@
+# Normalize text files, but keep Windows launchers CRLF and leave vendored
+# upstream files byte-for-byte untouched (their SHA-256 is verified in NOTICE).
+* text=auto
+*.mjs text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+*.png binary
+vendor/** -text
