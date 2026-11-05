@@ -1,6 +1,6 @@
 {
   "name": "launch-dsh-replay",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "description": "Desktop port of the DSH WEB launch-dsh-replay viewer: offline, read-only session replay for DeepSeek Harness session v4 (desktop DSH 0.2.x) and v3 (WEB 0.15) logs. Zero runtime dependencies.",
   "type": "module",

@@ -108,6 +108,14 @@ check('single-file HTML export embeds data + vendored viewer', () => {
   assert.ok(result.bytes > 400_000, `viewer bundle too small: ${result.bytes} bytes`)
 })
 
+check('HTML links point at this project and keep the engine credit', () => {
+  const html = readFileSync(htmlPath, 'utf8')
+  assert.ok(html.includes('https://github.com/hpsks416/launch-dsh-replay'), 'project repo link missing')
+  assert.ok(!html.includes('https://github.com/MingoZhou/dsh-replay'), 'upstream repo link should be rewritten')
+  assert.ok(html.includes('engine @mingozhou/dsh-replay'), 'engine attribution missing')
+  assert.ok(html.includes('Exported by launch-dsh-replay'), 'exported-by label missing')
+})
+
 check('plain (uncompressed) JSONL session works too', () => {
   const stats = summarize(parseSessionFile(jsonlPath))
   assert.equal(stats.toolCalls, 1)

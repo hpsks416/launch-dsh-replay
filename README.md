@@ -50,8 +50,8 @@ launch-dsh-replay/
    ├─ LICENSE  NOTICE.md
 ```
 
-> 发布包为 `launch-dsh-replay-1.1.0.zip`，解压得到 `launch-dsh-replay-1.1.0/`；
-> 同目录附 `SHA256SUMS.txt`，校验：`Get-FileHash launch-dsh-replay-1.1.0.zip -Algorithm SHA256`。
+> 发布包为 `launch-dsh-replay-1.1.1.zip`，解压得到 `launch-dsh-replay-1.1.1/`；
+> 同目录附 `SHA256SUMS.txt`，校验：`Get-FileHash launch-dsh-replay-1.1.1.zip -Algorithm SHA256`。
 
 ## 安装
 

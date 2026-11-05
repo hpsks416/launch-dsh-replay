@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.1 — 2026-11-05
+
+导出的 HTML 指向本项目仓库。
+
+### 变更
+- 单文件 HTML 导出中的仓库链接改为本项目仓库
+  （`github.com/hpsks416/launch-dsh-replay`）：页头 GitHub 链接、页脚 Install · Star 链接。
+- 页脚文案改为「Exported by launch-dsh-replay · engine @mingozhou/dsh-replay (MIT)」，
+  保留上游引擎署名；页头品牌名改为 launch-dsh-replay；`<meta name="generator">` 同步。
+- 引导页页脚新增本项目仓库链接（引擎署名保留）。
+- 实现方式：vendor 内的 viewer 文件保持字节不变（SHA-256 仍与上游一致），只在生成 HTML
+  时对链接/品牌文案做 overlay，见 `lib/sessions.mjs` 的 `applyAttributionOverlay`。
+- 自检增至 9 项（新增「HTML 链接指向本项目且保留引擎署名」）。
+
 ## 1.1.0 — 2026-11-05
 
 部署就绪版：从「本机可用」升级为「他人可直接安装」。

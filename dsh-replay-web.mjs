@@ -29,7 +29,7 @@ import {
 } from './lib/sessions.mjs'
 
 const SERVICE = 'launch-dsh-replay'
-const VERSION = '1.1.0'
+const VERSION = '1.1.1'
 
 function parseArgs (argv) {
   const options = { port: Number(process.env.DSH_REPLAY_PORT ?? 7781), limit: 40, open: true, root: sessionsRoot() }
@@ -144,6 +144,7 @@ function guideHtml (sessions) {
 ${rows || '<div class="empty">没有找到会话日志（检查 DSH_REPLAY_ROOT 或是否已有对话）</div>'}
 <footer>
   v4 = 桌面端 DSH（dsh-desktop 0.2.x）会话；v3 = 旧版 WEB DSH 会话。<br>
+  项目：<a href="https://github.com/hpsks416/launch-dsh-replay">launch-dsh-replay</a> ·
   渲染引擎：<a href="https://github.com/MingoZhou/dsh-replay">@mingozhou/dsh-replay</a> 0.4.2（MIT，离线内联）。
 </footer>
 </body></html>`
