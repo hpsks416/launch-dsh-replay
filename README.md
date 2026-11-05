@@ -38,7 +38,8 @@ launch-dsh-replay/
 ├─ render.mjs                命令行：列表 / 渲染 / 统计
 ├─ lib/decode.mjs            拼接式 zstd 帧解码（兼容写入中的 torn tail）
 ├─ lib/sessions.mjs          会话发现 / 根目录解析 / 元数据缓存 / 单文件 HTML 导出
-├─ tests/smoke.mjs           自检（8 项，零依赖、无需 DSH）
+├─ tests/smoke.mjs           自检（9 项，零依赖、无需 DSH）
+├─ tools/persistence-lag.mjs 落盘滞后探针（测崩溃窗口用）
 ├─ launch-dsh-replay.cmd     Windows 双击启动（纯 ASCII）
 ├─ launch-dsh-replay.ps1     Windows 交互菜单
 ├─ docs/replay-overview.png  回放界面实拍
@@ -50,8 +51,8 @@ launch-dsh-replay/
    ├─ LICENSE  NOTICE.md
 ```
 
-> 发布包为 `launch-dsh-replay-1.1.1.zip`，解压得到 `launch-dsh-replay-1.1.1/`；
-> 同目录附 `SHA256SUMS.txt`，校验：`Get-FileHash launch-dsh-replay-1.1.1.zip -Algorithm SHA256`。
+> 发布包为 `launch-dsh-replay-1.2.0.zip`，解压得到 `launch-dsh-replay-1.2.0/`；
+> 同目录附 `SHA256SUMS.txt`，校验：`Get-FileHash launch-dsh-replay-1.2.0.zip -Algorithm SHA256`。
 
 ## 安装
 
@@ -144,7 +145,7 @@ node dsh-replay-web.mjs [--port 7781] [--limit 40] [--no-open]
 
 | 磁盘上的会话文件 | 来源 | 支持 |
 |---|---|---|
-| `session.v4.jsonl.zstd` | DSH 桌面端 / DSH ≥ 0.2.1 | ✅ |
+| `session.v4.jsonl.zstd` | DSH 桌面端 0.2.x（实测 `0.2.2-rc.1`）/ DSH ≥ 0.2.1 | ✅ |
 | `session.v3.jsonl.zstd` | 旧版 WEB DSH（0.15 线） | ✅ |
 | `session.v2.jsonl.zstd` / 无版本后缀 `session.jsonl` | 更早的 DSH | ❌ 未支持（列表会跳过） |
 | `session.v5.*`（未来） | 未来 DSH | ❌ 未知格式；升级 DSH 后先跑自检 + 真实会话渲染验证 |
@@ -163,6 +164,35 @@ node dsh-replay-web.mjs [--port 7781] [--limit 40] [--no-open]
   （工具结果从 `user` 角色的 `tool-result` block 改为 `tool` 角色一等消息）。
 - 本项目自身代码 MIT，见根目录 `LICENSE`（含第三方声明）。
 
+## 崩前记录与崩溃修复（配套轮子）
+
+**先说清边界：本项目只读，不记录日志。** 记录器是 DSH 自己（append-only 的
+`session.v{3,4}.jsonl.zstd`）；部署本工具不改变 DSH 的落盘行为。官方持久化语义：
+`append` 是 best-effort，**`flush` 才是 durability barrier**（有界 write-behind 窗口 + 请求级 flush），
+崩溃丢的是「还没 flush 的那批事件」。
+
+实测（本机 `0.2.2-rc.1`，2026-11-05）：最后已提交事件落后「现在」约 **0.7–0.8 s**；
+日志被截断到半个帧时，本工具仍能解码**全部完整帧**（-320 B 只丢 1 个事件，不报错）。
+
+| 轮子 | 作用 | 位置 |
+|---|---|---|
+| `dsh-session-sync-flush`（适配版） | 关键事件（user/assistant/tool call/result）后立即 `flush`，把丢失窗口从「整个请求」缩到「单个事件」 | `CINTRO\dsh-session-sync-flush\`，已装入 desktop profile |
+| `dsh-session-surgeon`（MIT，13★） | 崩溃损坏修复：torn zstd、write/fsync 之间崩溃导致的零填充尾部、seq gap、缺 message id 等；默认 dry-run + `.bak.<utc>` | `dsh-session-surgeon` 插件（desktop profile），CLI 见下 |
+| 本工具 `tools/persistence-lag.mjs` | 测崩溃窗口（落盘滞后、torn 尾帧） | `node tools/persistence-lag.mjs [--json]` |
+
+> 注：surgeon 的 **CLI** 会按 PATH 上的 `dsh` 探版本；本机全局 CLI 仍是 0.1.5（只读 v3），
+> 所以 CLI 看 v4 会报 `foreign-version`。**用插件形态（重启桌面端后）**它会按桌面端 0.2.2 的运行时
+> 正确识别 v4；急需 CLI 修复时可先升级全局 CLI（另议）。
+
+```bash
+# 崩溃窗口测量（安装 sync-flush 前后各跑一次对比）
+node tools/persistence-lag.mjs --json
+
+# 崩后修复（surgeon；--apply 才写，默认 dry-run，会先写 .bak.<utc>）
+node "%USERPROFILE%\.dsh\profiles\desktop\node_modules\dsh-session-surgeon\bin\dsh-session-surgeon.mjs" inspect <session-id>
+node "%USERPROFILE%\.dsh\profiles\desktop\node_modules\dsh-session-surgeon\bin\dsh-session-surgeon.mjs" repair <session-id> --apply
+```
+
 ## 已知限制
 
 - 超大会话（压缩后 > 10 MB）导出的单文件 HTML 会很大（几十 MB），浏览器打开慢；引导页按需渲染并缓存。
@@ -173,7 +203,7 @@ node dsh-replay-web.mjs [--port 7781] [--limit 40] [--no-open]
 ## 自测
 
 ```bash
-node tests/smoke.mjs    # 8 项：zstd 帧解码 / v4 解析 / 工具结果配对 / HTML 导出 / 根目录解析
+node tests/smoke.mjs    # 9 项：zstd 帧解码 / v4 解析 / 工具结果配对 / HTML 导出 / 根目录解析
 ```
 
 安装器会自动跑这条命令；8/8 通过才算装好。

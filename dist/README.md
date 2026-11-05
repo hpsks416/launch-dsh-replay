@@ -4,13 +4,13 @@
 
 | 文件 | 说明 |
 |---|---|
-| `launch-dsh-replay-1.1.1.zip` | 可分发包（解压后双击 `install.cmd` 安装；任何平台也可直接 `node` 命令运行） |
+| `launch-dsh-replay-1.2.0.zip` | 可分发包（解压后双击 `install.cmd` 安装；任何平台也可直接 `node` 命令运行） |
 | `SHA256SUMS.txt` | 上表的 SHA-256 校验和 |
 
 校验（Windows PowerShell）：
 
 ```powershell
-Get-FileHash .\launch-dsh-replay-1.1.1.zip -Algorithm SHA256
+Get-FileHash .\launch-dsh-replay-1.2.0.zip -Algorithm SHA256
 # 与 SHA256SUMS.txt 中的值逐字符比对
 ```
 

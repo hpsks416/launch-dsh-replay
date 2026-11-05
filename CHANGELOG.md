@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.2.0 — 2026-11-05
+
+崩溃记录 / 修复整合。
+
+### 新增
+- `tools/persistence-lag.mjs`：落盘滞后探针（最后已提交事件 vs 现在、torn 尾帧、帧数），用于量化崩溃窗口。
+- README 新增「崩前记录与崩溃修复（配套轮子）」：官方 flush=durability barrier 语义、实测滞后 0.7–0.8 s、
+  `dsh-session-sync-flush`（事件级 flush）与 `dsh-session-surgeon`（崩后修复）的用法。
+- 适配 `dsh-session-sync-flush` 到桌面端 `0.2.2-rc.1`：复制到 `CINTRO`（不改 WEB 原件）、
+  兼容声明放宽、flush 调用双接口回退（`sessions.flush` → `sessionPersistence.flush`），已装入 desktop profile。
+- 安装 `dsh-session-surgeon 0.2.11`（desktop profile，插件形态，用于崩后修复；CLI 的 v4 限制已在 README 注明）。
+
+### 变更
+- 更正桌面端版本事实：当前为 `dsh-desktop 0.2.2-rc.1`（会话格式仍为 v4）。
+- 自检保持 9 项。
+
 ## 1.1.1 — 2026-11-05
 
 导出的 HTML 指向本项目仓库。

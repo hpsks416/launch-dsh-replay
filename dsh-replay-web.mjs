@@ -29,7 +29,7 @@ import {
 } from './lib/sessions.mjs'
 
 const SERVICE = 'launch-dsh-replay'
-const VERSION = '1.1.1'
+const VERSION = '1.2.0'
 
 function parseArgs (argv) {
   const options = { port: Number(process.env.DSH_REPLAY_PORT ?? 7781), limit: 40, open: true, root: sessionsRoot() }
